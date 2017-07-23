@@ -12,12 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#11000000" />
     <RadioGroup
         android:id="@+id/rg_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/home_bottom_parent_bg"
+        android:background="#ffffffff"
         android:orientation="horizontal">
         <RadioButton
             android:id="@+id/rb_home"
@@ -29,12 +34,12 @@
             style="@style/MainButtonStyle"
             android:drawableTop="@drawable/type_button_selector"
             android:text="分类" />
-        <RadioButton
+       <!-- <RadioButton
             android:id="@+id/rb_community"
             style="@style/MainButtonStyle"
             android:drawableTop="@drawable/community_button_selector"
             android:paddingTop="10dp"
-            android:text="发现" />
+            android:text="发现" />-->
         <RadioButton
             android:id="@+id/rb_cart"
             style="@style/MainButtonStyle"

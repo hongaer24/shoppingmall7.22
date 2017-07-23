@@ -49,19 +49,19 @@ public class UserFragment extends BaseFragment implements GradationScrollView.Sc
     TextView tvUserLocation;
     @BindView(R.id.tv_user_collect)
     TextView tvUserCollect;
-    @BindView(R.id.tv_user_coupon)
+   //@BindView(R.id.tv_user_coupon)
     TextView tvUserCoupon;
-    @BindView(R.id.tv_user_score)
+   /* @BindView(R.id.tv_user_score)*/
     TextView tvUserScore;
-    @BindView(R.id.tv_user_prize)
+   // @BindView(R.id.tv_user_prize)
     TextView tvUserPrize;
-    @BindView(R.id.tv_user_ticket)
+   // @BindView(R.id.tv_user_ticket)
     TextView tvUserTicket;
-    @BindView(R.id.tv_user_invitation)
+   // @BindView(R.id.tv_user_invitation)
     TextView tvUserInvitation;
-    @BindView(R.id.tv_user_callcenter)
+   // @BindView(R.id.tv_user_callcenter)
     TextView tvUserCallcenter;
-    @BindView(R.id.tv_user_feedback)
+   // @BindView(R.id.tv_user_feedback)
     TextView tvUserFeedback;
     @BindView(R.id.ll_root)
     LinearLayout llRoot;

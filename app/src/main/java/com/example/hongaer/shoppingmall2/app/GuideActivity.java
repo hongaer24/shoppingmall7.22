@@ -20,7 +20,7 @@ public class GuideActivity extends AppCompatActivity {
             R.mipmap.map_1,
             R.mipmap.map_2,
             R.mipmap.map_3,
-            R.mipmap.map_4
+
     };
 
     private List<View> mViewList=new ArrayList<>();
