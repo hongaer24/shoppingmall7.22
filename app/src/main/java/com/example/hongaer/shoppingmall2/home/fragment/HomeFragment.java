@@ -1,23 +1,18 @@
 package com.example.hongaer.shoppingmall2.home.fragment;
 
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.example.hongaer.shoppingmall2.R;
 import com.example.hongaer.shoppingmall2.base.BaseFragment;
 import com.example.hongaer.shoppingmall2.home.adapter.HomeFragmentAdapter;
 import com.example.hongaer.shoppingmall2.home.bean.ResultDataBean;
-import com.example.hongaer.shoppingmall2.utils.Constans;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
-import okhttp3.Call;
 
 /**
  * Created by hongaer on 2017/7/1.
@@ -31,23 +26,40 @@ public class HomeFragment extends BaseFragment {
     private TextView tv_message_home;
     private ResultDataBean.ResultBean resultbean;
     private HomeFragmentAdapter adapter;
+    private WebView webview;
 
     @Override
     public View initView() {
         Log.e(TAG, "主页视图被初始化了");
         View view = View.inflate(mContext, R.layout.fragment_home,null);
-        rvHome = (RecyclerView) view.findViewById(R.id.rv_home);
+        webview= (WebView) view.findViewById(R.id.wb_good_info_more);
+        WebSettings webSettings=webview.getSettings();
+         webSettings.setUseWideViewPort(true);
+         webSettings.setJavaScriptEnabled(true);
+         webview.setWebViewClient(new WebViewClient());
+         webview.loadUrl( "http://killsound888.oicp.net:118/jinque/debug/jqmall/index.php?controller=site&action=index");
+         webview.setWebViewClient(new HelloWebViewClient());
+        //Web视图
+
+
+       /* rvHome = (RecyclerView) view.findViewById(R.id.rv_home);
         ib_top = (ImageView) view.findViewById(R.id.ib_top);
         tv_search_home = (TextView) view.findViewById(R.id.tv_search_home);
-        tv_message_home = (TextView)
-                view.findViewById(R.id.tv_message_home);
+        tv_message_home = (TextView) view.findViewById(R.id.tv_message_home);*/
 //设置点击事件
-        initListener();
+        /*initListener();*/
         return view;
     }
 
-    @Override
-    public void initData() {
+    private class HelloWebViewClient extends WebViewClient {
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+    }
+
+
+    /*public void initData() {
         super.initData();
         Log.e(TAG, "主页数据被初始化了");
         String url = Constans.HOME_URL;
@@ -125,5 +137,5 @@ public class HomeFragment extends BaseFragment {
                         Toast.LENGTH_SHORT).show();
             }
         });
-    }
+    }*/
 }
