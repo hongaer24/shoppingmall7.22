@@ -32,12 +32,12 @@ public class HomeFragment extends BaseFragment {
     public View initView() {
         Log.e(TAG, "主页视图被初始化了");
         View view = View.inflate(mContext, R.layout.fragment_home,null);
-        webview= (WebView) view.findViewById(R.id.wb_good_info_more);
+        webview= (WebView) view.findViewById(R.id.wb);
         WebSettings webSettings=webview.getSettings();
          webSettings.setUseWideViewPort(true);
          webSettings.setJavaScriptEnabled(true);
          webview.setWebViewClient(new WebViewClient());
-         webview.loadUrl( "http://killsound888.oicp.net:118/jinque/debug/jqmall/index.php?controller=site&action=index");
+         webview.loadUrl(  "http://killsound888.oicp.net:118/jinque/debug/jqmall/index.php?controller=site&action=index");
          webview.setWebViewClient(new HelloWebViewClient());
         //Web视图
 

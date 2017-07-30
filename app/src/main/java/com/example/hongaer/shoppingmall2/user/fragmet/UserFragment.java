@@ -1,12 +1,8 @@
 package com.example.hongaer.shoppingmall2.user.fragmet;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -16,19 +12,33 @@ import android.widget.Toast;
 import com.example.hongaer.shoppingmall2.R;
 import com.example.hongaer.shoppingmall2.app.LoginActivity;
 import com.example.hongaer.shoppingmall2.base.BaseFragment;
-import com.hankkin.gradationscroll.GradationScrollView;
+import com.example.hongaer.shoppingmall2.home.bean.ResultDataBean;
+import com.example.hongaer.shoppingmall2.user.view.GoodsActivity;
+import com.example.hongaer.shoppingmall2.user.view.PositionActivity;
+import com.example.hongaer.shoppingmall2.utils.Constans;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.Call;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by hongaer on 2017/7/1.
  */
 
-public class UserFragment extends BaseFragment implements GradationScrollView.ScrollViewListener {
+public class UserFragment extends BaseFragment {
 
+
+    Unbinder unbinder;
     @BindView(R.id.ib_user_icon_avator)
     ImageButton ibUserIconAvator;
     @BindView(R.id.tv_username)
@@ -39,6 +49,8 @@ public class UserFragment extends BaseFragment implements GradationScrollView.Sc
     TextView tvAllOrder;
     @BindView(R.id.tv_user_pay)
     TextView tvUserPay;
+    @BindView(R.id.tv_doing_pay)
+    TextView tvDoingPay;
     @BindView(R.id.tv_user_receive)
     TextView tvUserReceive;
     @BindView(R.id.tv_user_finish)
@@ -49,45 +61,98 @@ public class UserFragment extends BaseFragment implements GradationScrollView.Sc
     TextView tvUserLocation;
     @BindView(R.id.tv_user_collect)
     TextView tvUserCollect;
-   //@BindView(R.id.tv_user_coupon)
+    @BindView(R.id.tv_user_coupon)
     TextView tvUserCoupon;
-   /* @BindView(R.id.tv_user_score)*/
-    TextView tvUserScore;
-   // @BindView(R.id.tv_user_prize)
-    TextView tvUserPrize;
-   // @BindView(R.id.tv_user_ticket)
-    TextView tvUserTicket;
-   // @BindView(R.id.tv_user_invitation)
-    TextView tvUserInvitation;
-   // @BindView(R.id.tv_user_callcenter)
-    TextView tvUserCallcenter;
-   // @BindView(R.id.tv_user_feedback)
-    TextView tvUserFeedback;
     @BindView(R.id.ll_root)
     LinearLayout llRoot;
-    @BindView(R.id.scrollview)
-    GradationScrollView scrollview;
-    @BindView(R.id.tv_usercenter)
-    TextView tvUsercenter;
-    @BindView(R.id.ib_user_setting)
-    ImageButton ibUserSetting;
     @BindView(R.id.ib_user_message)
     ImageButton ibUserMessage;
-    Unbinder unbinder;
+    Unbinder unbinder1;
     private int height;
+    private int mPosition;
+    private FirstPageFragment firstPageFragment;
+    private ResultDataBean.ResultBean resultbean;
+    private String url;
 
     @Override
     public View initView() {
         View view = View.inflate(mContext, R.layout.fragment_user, null);
+        unbinder1 = ButterKnife.bind(this, view);
+        new Thread(){
+            @Override
+            public void run() {
+                postJson();
+            }
+        }.start();
         return view;
     }
-
     public void initData() {
         super.initData();
-        initListeners();
+         url = Constans.HOME_URL;
+        OkHttpUtils
+                .get()
+                .url(url)
+                .build()
+                .execute(new StringCallback()
+                {
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        Log.e("tag","首页请求失败==="+e.getMessage());
+                    }
 
+                    @Override
+                    public void onResponse(String response, int id) {
+                        Log.e("tag666","首页请求成功==="+response);
+                    }
+
+                });
     }
-    private void initListeners() {
+    private void postJson() {
+        //申明给服务端传递一个json串
+        //创建一个OkHttpClient对象
+
+        OkHttpClient okHttpClient = new OkHttpClient();
+        //创建一个RequestBody(参数1：数据类型 参数2传递的json串)
+         FormBody body = new  FormBody.Builder()
+                 .add("login_info","kobe")
+                             .add("password","kobekobe").build();
+
+        Request request=new Request.Builder().url(url).post(body).build();
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            if(response.isSuccessful()){
+                     Log.i("taglogin",response.body().string());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+    /*private void processData(String json) {
+      LoginBean loginBean = JSON.parseObject(json, LoginBean.class);
+        resultbean = resultdatabean.getResult();
+        //Log.e(TAG,"解析成功===="+ resultbean.getBanner_info().get(1).getImage();
+
+
+            //设置网格布局
+
+        }*/
+
+
+
+
+
+
+
+   /* public void initData() {
+        super.initData();
+      *//*  initListeners();*//*
+
+    }*/
+    /*private void initListeners() {
 
         ViewTreeObserver vto = rlHeader.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -105,10 +170,9 @@ public class UserFragment extends BaseFragment implements GradationScrollView.Sc
                 scrollview.setScrollViewListener(UserFragment.this);
             }
         });
-    }
+    }*/
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+   /* public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // TODO: inflate a fragment view
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         unbinder = ButterKnife.bind(this, rootView);
@@ -117,33 +181,132 @@ public class UserFragment extends BaseFragment implements GradationScrollView.Sc
         tvUsercenter.setBackgroundColor(Color.argb((int)0, 0,0,255));
 
         return rootView;
-    }
+    }*/
 
-    @Override
-    public void onDestroyView() {
+
+  /*  public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
-
-    @OnClick({R.id.tv_username, R.id.ib_user_setting, R.id.ib_user_message})
+*/}
+  @OnClick({R.id.ib_user_icon_avator, R.id.tv_username, R.id.rl_header, R.id.tv_all_order, R.id.tv_user_pay, R.id.tv_doing_pay, R.id.tv_user_receive, R.id.tv_user_finish, R.id.tv_user_drawback, R.id.tv_user_location, R.id.ib_user_message})
     public void onClick(View view) {
+
         switch (view.getId()) {
             case R.id.tv_username:
-               // Toast.makeText(mContext,"登录注册",Toast.LENGTH_SHORT).show();
-                Intent intent=new Intent(mContext, LoginActivity.class);
+                Toast.makeText(mContext, "登录注册", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, LoginActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.ib_user_setting:
-                Toast.makeText(mContext,"设置",Toast.LENGTH_SHORT).show();
+            case R.id.tv_user_location:
+                Intent intent7 = new Intent(mContext, PositionActivity.class);
+                startActivity(intent7);
+                Toast.makeText(mContext, "设置", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.ib_user_message:
-                Toast.makeText(mContext,"消息",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "消息", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.tv_all_order:
+                Toast.makeText(mContext, "查看全部订单", Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(mContext, GoodsActivity.class);
+                startActivity(intent1);
+
+                break;
+            case R.id.tv_user_pay:
+                // Toast.makeText(mContext,"待付款",Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(mContext, GoodsActivity.class);
+                intent2.putExtra("position1", mPosition);
+                startActivity(intent2);
+
+                break;
+            case R.id.tv_user_receive:
+                // Toast.makeText(mContext,"待收货",Toast.LENGTH_SHORT).show();
+                Intent intent3 = new Intent(mContext, GoodsActivity.class);
+                startActivity(intent3);
+                break;
+            case R.id.tv_user_finish:
+                // Toast.makeText(mContext,"待评价",Toast.LENGTH_SHORT).show();
+                Intent intent4 = new Intent(mContext, GoodsActivity.class);
+                startActivity(intent4);
+                break;
+            case R.id.tv_user_drawback:
+                // Toast.makeText(mContext,"退款",Toast.LENGTH_SHORT).show();
+                Intent intent5 = new Intent(mContext, GoodsActivity.class);
+                startActivity(intent5);
+                break;
+            case R.id.tv_doing_pay:
+                // Toast.makeText(mContext,"生产中",Toast.LENGTH_SHORT).show();
+                Intent intent6 = new Intent(mContext, GoodsActivity.class);
+                startActivity(intent6);
+                break;
+
+
         }
     }
 
-    @Override
-    public void onScrollChanged(GradationScrollView scrollView, int x, int y, int oldx, int oldy) {
+
+
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder1.unbind();
+    }
+
+   /* @OnClick({R.id.ib_user_icon_avator, R.id.tv_username, R.id.rl_header, R.id.tv_all_order, R.id.tv_user_pay, R.id.tv_doing_pay, R.id.tv_user_receive, R.id.tv_user_finish, R.id.tv_user_drawback, R.id.tv_user_location, R.id.ib_user_message})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ib_user_icon_avator:
+                break;
+            case R.id.tv_username:
+                Toast.makeText(mContext, "登录注册", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, LoginActivity.class);
+                startActivity(intent);
+            case R.id.rl_header:
+                break;
+            case R.id.tv_all_order:
+                Toast.makeText(mContext, "查看全部订单", Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(mContext, GoodsActivity.class);
+                startActivity(intent1);
+                break;
+            case R.id.tv_user_pay:
+                // Toast.makeText(mContext,"待付款",Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(mContext, GoodsActivity.class);
+                intent2.putExtra("position1", mPosition);
+                startActivity(intent2);
+
+                break;
+            case R.id.tv_doing_pay:
+                // Toast.makeText(mContext,"生产中",Toast.LENGTH_SHORT).show();
+                Intent intent6 = new Intent(mContext, GoodsActivity.class);
+                startActivity(intent6);
+                break;
+            case R.id.tv_user_receive:
+                // Toast.makeText(mContext,"待收货",Toast.LENGTH_SHORT).show();
+                Intent intent3 = new Intent(mContext, GoodsActivity.class);
+                startActivity(intent3);
+                break;
+            case R.id.tv_user_finish:
+                // Toast.makeText(mContext,"待评价",Toast.LENGTH_SHORT).show();
+                Intent intent4 = new Intent(mContext, GoodsActivity.class);
+                startActivity(intent4);
+                break;
+            case R.id.tv_user_drawback:
+                // Toast.makeText(mContext,"退款",Toast.LENGTH_SHORT).show();
+                Intent intent5 = new Intent(mContext, GoodsActivity.class);
+                startActivity(intent5);
+                break;
+            case R.id.tv_user_location:
+                Intent intent7 = new Intent(mContext, PositionActivity.class);
+                startActivity(intent7);
+                Toast.makeText(mContext, "设置", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.ib_user_message:
+                Toast.makeText(mContext, "消息", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+*/
+
+   /* public void onScrollChanged(GradationScrollView scrollView, int x, int y, int oldx, int oldy) {
         if (y <= 0) {
             //设置标题的背景颜色  -透明
             tvUsercenter.setBackgroundColor(Color.argb((int) 0, 0,0,255));
@@ -159,5 +322,6 @@ public class UserFragment extends BaseFragment implements GradationScrollView.Sc
             //滑动到banner下面设置普通颜色 - 非透明
             tvUsercenter.setBackgroundColor(Color.argb((int) 255, 0,0,255));
         }
-    }
+    }*/
+
 }
